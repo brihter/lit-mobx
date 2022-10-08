@@ -1,6 +1,6 @@
-import * as ui from './ui/index.mjs'
-import * as util from './util/index.mjs'
-import * as app from './app/index.mjs'
+import ui from './ui/index.mjs'
+import util from './util/index.mjs'
+import app from './app/index.mjs'
 
 if (window && !window.X) {
   window.X = {}

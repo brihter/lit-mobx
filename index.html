@@ -5,11 +5,17 @@
   <meta charset="utf-8">
   <title>lit-mobx</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="dist/x-debug.js"></script>
+  <script src="build/x.js"></script>
+  <style>
+    body {margin: 0;padding: 0;display: flex;}
+    body x-panel {flex:1}
+  </style>
 </head>
 
 <body>
-  <script>X.app.init()</script>
+  <script>
+    X.app.init()
+  </script>
 </body>
 
 </html>

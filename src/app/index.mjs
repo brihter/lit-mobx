@@ -1,18 +1,31 @@
-import * as util from '../util/index.mjs'
-import * as ui from '../ui/index.mjs'
+import store from '../store/index.mjs'
+import util from '../util/index.mjs'
+import ui from '../ui/index.mjs'
 
-import { State } from './state.mjs'
+const init = async () => {
+  const items = new store.Store({
+    items: []
+  })
 
-const init = () => {
-  const appState = new State()
-
-  util.create([
-    new ui.Panel({ title: 'Panel 1', state: appState }),
-    new ui.Panel({ title: 'Panel 2', state: appState }),
-    new ui.Panel({ title: 'Panel 3', state: appState })
+  await util.dom.create([
+    new ui.ListPanel({
+      title: 'list 1',
+      store: items,
+      storeItemTpl: (record) => record.title
+    }),
+    new ui.ListPanel({
+      title: 'list 2',
+      store: items,
+      storeItemTpl: (record) => record.title
+    })
   ])
+
+  setInterval(() => {
+    if (items.count > 10) return
+    items.add({ title: Math.random() })
+  }, 1000)
 }
 
-export {
+export default {
   init
 }

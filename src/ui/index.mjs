@@ -1,5 +1,5 @@
-import { Panel } from './panel.mjs'
+import { ListPanel } from './list-panel.mjs'
 
-export {
-  Panel
+export default {
+  ListPanel
 }

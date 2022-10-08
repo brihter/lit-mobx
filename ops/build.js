@@ -16,8 +16,8 @@ const buildJS = async (cfg = {}) => {
 
 const main = async () => {
   await Promise.all([
-    buildJS({ minify: false, outfile: 'dist/x-debug.js' }),
-    buildJS({ minify: true, outfile: 'dist/x.js' })
+    buildJS({ minify: false, outfile: 'build/x-debug.js' }),
+    buildJS({ minify: true, outfile: 'build/x.js' })
   ])
 }
 

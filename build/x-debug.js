@@ -1,20 +1,10 @@
 (() => {
   var __defProp = Object.defineProperty;
   var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-  var __export = (target, all) => {
-    for (var name in all)
-      __defProp(target, name, { get: all[name], enumerable: true });
-  };
   var __publicField = (obj, key, value) => {
     __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
     return value;
   };
-
-  // src/ui/index.mjs
-  var ui_exports = {};
-  __export(ui_exports, {
-    Panel: () => Panel
-  });
 
   // node_modules/@lit/reactive-element/css-tag.js
   var t = window;
@@ -4802,50 +4792,58 @@
     });
   }
 
-  // src/ui/panel.mjs
-  var Panel = class extends s4 {
+  // src/ui/list-panel.mjs
+  var ListPanel = class extends s4 {
     constructor(cfg = {}) {
       super();
-      this._state = cfg.state;
-      this.title = cfg.title || "My Panel";
-      autorun(() => this.count = this._state.count);
+      this._cfg = cfg;
+      this.version = 0;
+      this.title = cfg.title || "my list panel";
+      this.store = cfg.store;
+      if (this.store) {
+        autorun(() => this.version = this.store.version);
+      }
     }
     render() {
       return y`
       <div>
         <h1>${this.title}</h1>
         <hr />
-        Count is ${this.count}
-        <slot></slot>
+        <ul>
+          ${this.store.items.map(
+        (item) => y`<li>${this._cfg.storeItemTpl(item)}</li>`
+      )}
+        </ul>
       </div>
     `;
     }
   };
-  __publicField(Panel, "styles", i`
-    div { border: 1px solid #ccc; padding: 10px; margin: 10px; }
-    h1 {font-size:1em;}
+  __publicField(ListPanel, "styles", i`
+    div { padding: 1em; margin: 0; }
+    div h1 {margin: 0;}
+    div ul {margin-bottom:0;}
   `);
-  __publicField(Panel, "properties", {
-    title: { type: String },
-    count: { type: Number }
+  __publicField(ListPanel, "properties", {
+    version: { type: Number },
+    title: { type: String }
   });
-  customElements.define("x-panel", Panel);
+  customElements.define("x-panel", ListPanel);
 
-  // src/util/index.mjs
-  var util_exports = {};
-  __export(util_exports, {
-    create: () => create
-  });
+  // src/ui/index.mjs
+  var ui_default = {
+    ListPanel
+  };
+
+  // src/util/dom.mjs
+  var isInstance = (obj) => obj instanceof s4;
   var createOne = async (cfg = {}) => {
-    let component;
-    if (!(cfg instanceof s4)) {
-      const Component = customElements.get(cfg.type);
-      if (!Component) {
+    let component = cfg;
+    if (!isInstance(cfg)) {
+      const ctor = customElements.get(cfg.type);
+      if (!ctor) {
         return console.warn(`Error: Component type ${cfg.type} doesn't exist.`);
       }
-      component = new Component(cfg);
-    } else {
-      component = cfg;
+      component = new ctor(cfg);
     }
     let renderTo = document.body;
     if (cfg.renderTo) {
@@ -4860,45 +4858,76 @@
     const tasks = cfg.map(createOne);
     await Promise.all(tasks);
   };
+  var dom_default = {
+    create
+  };
 
-  // src/app/index.mjs
-  var app_exports = {};
-  __export(app_exports, {
-    init: () => init
-  });
+  // src/util/index.mjs
+  var util_default = {
+    dom: dom_default
+  };
 
-  // src/app/state.mjs
-  var State = class {
-    count = 0;
-    constructor() {
-      makeObservable(this, {
-        count: observable,
-        increment: action
-      });
-      setInterval(this.increment.bind(this), 1e3);
+  // src/store/store.mjs
+  var Store = class {
+    items = [];
+    version = 0;
+    get count() {
+      return this.items.length;
     }
-    increment() {
-      this.count++;
+    constructor(cfg = {}) {
+      makeObservable(this, {
+        items: observable,
+        version: observable,
+        count: computed,
+        add: action
+      });
+      this.items = cfg.items;
+    }
+    add(record) {
+      this.items.push(record);
+      this.version++;
     }
   };
 
+  // src/store/index.mjs
+  var store_default = {
+    Store
+  };
+
   // src/app/index.mjs
-  var init = () => {
-    const appState = new State();
-    create([
-      new Panel({ title: "Panel 1", state: appState }),
-      new Panel({ title: "Panel 2", state: appState }),
-      new Panel({ title: "Panel 3", state: appState })
+  var init = async () => {
+    const items = new store_default.Store({
+      items: []
+    });
+    await util_default.dom.create([
+      new ui_default.ListPanel({
+        title: "list 1",
+        store: items,
+        storeItemTpl: (record) => record.title
+      }),
+      new ui_default.ListPanel({
+        title: "list 2",
+        store: items,
+        storeItemTpl: (record) => record.title
+      })
     ]);
+    setInterval(() => {
+      if (items.count > 10)
+        return;
+      items.add({ title: Math.random() });
+    }, 1e3);
+  };
+  var app_default = {
+    init
   };
 
   // src/index.mjs
   if (window && !window.X) {
     window.X = {};
   }
-  window.X.ui = ui_exports;
-  window.X.util = util_exports;
-  window.X.app = app_exports;
+  window.X.ui = ui_default;
+  window.X.util = util_default;
+  window.X.app = app_default;
 })();
 /**
  * @license

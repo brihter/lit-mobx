@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "node build"
+    "build": "npx nodemon -e js,mjs --ignore '.git/' --ignore '.github/' --ignore 'node_modules/' --ignore build/ --ignore ops/ ops/build.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "mobx": "^6.6.2"
   },
   "devDependencies": {
-    "esbuild": "^0.15.10"
+    "esbuild": "^0.15.10",
+    "nodemon": "^2.0.20"
   }
 }
