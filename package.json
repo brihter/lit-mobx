@@ -1,0 +1,26 @@
+{
+  "name": "lit-mobx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brihter/lit-mobx.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brihter/lit-mobx/issues"
+  },
+  "homepage": "https://github.com/brihter/lit-mobx#readme",
+  "dependencies": {
+    "lit": "^2.4.0",
+    "mobx": "^6.6.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.15.10"
+  }
+}
