@@ -9,6 +9,9 @@ This repository explores the possibility of sharing state between web components
 Create the store.
 
 ```js
+import store from '../store/index.mjs'
+// ...
+
 const items = new store.Store({
   items: []
 })
@@ -17,7 +20,11 @@ const items = new store.Store({
 Inject the store.
 
 ```js
-await util.dom.create([
+import util from '../util/index.mjs'
+import ui from '../ui/index.mjs'
+// ...
+
+util.dom.create([
   new ui.ListPanel({
     title: 'List #1',
     store: items,
