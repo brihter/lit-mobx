@@ -17,16 +17,16 @@ const items = new store.Store({
 Inject the store.
 
 ```js
-  await util.dom.create([
-    new ui.ListPanel({
-      title: 'List #1',
-      store: items,
-      storeItemTpl: (record) => record.title
-    }),
-    new ui.ListPanel({
-      title: 'List #2',
-      store: items,
-      storeItemTpl: (record) => record.title
-    })
-  ])
+await util.dom.create([
+  new ui.ListPanel({
+    title: 'List #1',
+    store: items,
+    storeItemTpl: (record) => record.title
+  }),
+  new ui.ListPanel({
+    title: 'List #2',
+    store: items,
+    storeItemTpl: (record) => record.title
+  })
+])
 ```
